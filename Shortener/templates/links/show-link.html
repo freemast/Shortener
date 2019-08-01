@@ -1,0 +1,40 @@
+{% extends 'links/base.html' %}
+
+{% block title %}Список ссылок пользователя{% endblock title %}
+
+{% block content %}
+    {% if user.is_active %}
+        <a href="/">Все ссылки</a> /
+        <a href="/user-links/">Мои ссылки</a> /
+        <a href="/add-link/">Добавить ссылку</a> /
+        <a href="/accounts/logout/">ВЫХОД ({{ user.get_username }})</a>
+    {% else %}
+        <p>Нужно авторизоваться для добавления ссылок. <a href="/accounts/login/">ВХОД</a> </p>
+    {% endif %}
+
+    <h3>Просмотр ссылки</h3>
+    <table width="100%">
+        <tr>
+            <th>Заголовок</th>
+            <th>Описание</th>
+            <th>Теги</th>
+            <th>Оригинальная ссылка</th>
+            <th>Короткая ссылка</th>
+            <th>Дата создания</th>
+            <th>Пользователь</th>
+        </tr>
+        <tr>
+            <td>{{ links.title }}</td>
+            <td>{{ links.description }}</td>
+            <td>
+                {% for tag in links.tags.all %}
+                    <a href="/tag/{{ tag.id }}">{{ tag.title }}</a>
+                {% endfor %}
+            </td>
+            <td><a href="{{ links.original_url }}">{{ links.original_url }}</a></td>
+            <td><a href="/{{ links.short_url }}">{{ request.get_host }}/{{ links.short_url }}</a></td>
+            <td class="text-center">{{ links.created }}</td>
+            <td class="text-center">{{ links.user }}</td>
+        </tr>
+    </table>
+{% endblock content %}
